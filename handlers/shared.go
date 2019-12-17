@@ -179,7 +179,8 @@ func ErrorRecovery(next EndpointHandler) EndpointHandler {
 
 func InjectRequestScope(next EndpointHandler, requestType int) EndpointHandler {
 	return func(req WebRequest, server ScimServer, ctx context.Context) (info *ResponseInfo) {
-		ctx = context.WithValue(ctx, RequestId{}, uuid.NewV4().String())
+		uuid, _ := uuid.NewV4()
+		ctx = context.WithValue(ctx, RequestId{}, uuid.String())
 		ctx = context.WithValue(ctx, RequestTimestamp{}, time.Now().Unix())
 		ctx = context.WithValue(ctx, RequestType{}, requestType)
 		return next(req, server, ctx)
